@@ -1,17 +1,22 @@
 
 call_GSE_7553_cor <- function(genelist){      #start
-
-#genelist    <- c("ESRRA", "ESRRG", "MITF","SNAI2","HMG20A","ZEB2", "AKT1", "AKT2", "AKT3")
-
-an_file <- "GPL96-15653.txt" 
-GEO_file <- "GSE7553_series_matrix.txt"
-
-
-setwd("C:/Users/CAIPINE/Downloads/GEO_DATA")
-strs1 <- readLines(an_file)
+#genelist    <- c("ESRRA", "ESRRG", "MITF","SNAI2","HMG20A","ZEB2")
+temp <- tempfile()
+download.file("http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?mode=raw&is_datatable=true&acc=GPL96&id=15653&db=GeoDb_blob82",temp)
+strs1 <- readLines(temp)
 rowlength1 <- length(strs1) - 16 - 1
-GPL96 <-   read.csv(an_file, header=TRUE, sep="\t",skip = 16, nrows= rowlength1 )
-x1 <- GPL96[ GPL96$Gene.Symbol %in% genelist,]   # gene name to ID
+x1 <-   read.csv(temp, header=TRUE, sep="\t",skip = 16, nrows= rowlength1 )
+x1 <-   x1[x1 $Gene.Symbol %in% genelist,]   # gene name to ID
+unlink(temp)
+
+GEO_file <- "GSE7553_series_matrix.txt"
+temp1 <- tempfile()
+download.file("ftp://ftp.ncbi.nlm.nih.gov/geo/series/GSE7nnn/GSE7553/matrix/GSE7553_series_matrix.txt.gz",temp)
+strs1 <- readLines(gz(temp1, GEO_file))
+
+
+
+
 
 
 strs <- readLines(GEO_file)
