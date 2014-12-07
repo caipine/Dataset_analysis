@@ -1,0 +1,8 @@
+linux RCurl
+
+for Command line
+    sudo apt-get install libcurl4-gnutls-dev 
+
+
+for R 
+    install.packages("RCurl")
