@@ -1,5 +1,4 @@
-###CMD###    sudo apt-get install libcurl4-gnutls-dev 
-####         install.packages("RCurl")
+
 module load R
 R
 
