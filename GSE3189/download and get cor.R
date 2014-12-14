@@ -22,16 +22,12 @@ head(GSE3189_matrix)
 
 
 
+
+
 genelist    <- "MITF"
 ID_REF_list <- GPL96[GPL96$Gene.Symbol %in% genelist,]$ID   # gene name to ID
 ID_REF_list
 ID_REF_list[1]
-
-paste(genelist, REF_ID[1], collapse = " ")
-
-
-
-
 
 Sys.time()
 my_frame <- GSE3189_matrix
@@ -75,6 +71,6 @@ rownames(frame_C) <- rownames(frame_B)
 #frame_C
 Data <- frame_C[-(1),,drop=FALSE]  # still a data.frame
 #Data
-write.table(Data, file="correlation_MITF_207233_s_at.txt", sep="\t", col.names = NA)
+write.table(Data, file=paste("correlation_with_others", genelist, REF_ID[1], collapse = "_"), sep="\t", col.names = NA)
 
 Sys.time()
