@@ -18,3 +18,63 @@ g1 <- read.csv(gzfile(temp, GEO_file), header=TRUE, sep="\t",skip = 26, nrows= 1
 unlink(temp)
 head(GSE3189_matrix)
 
+
+
+
+
+
+
+
+
+
+
+
+g2 <- as.data.frame (t(g1[8,2: ncol(g1)]))
+colnames(g2) <- "mel.stage"
+g2$stage[g2[,1] %in% c("Normal")] <- 1      #setup grade
+g2$stage[g2[,1] %in% c("Nevus")] <- 2
+g2$stage[g2[,1] %in% c("Melanoma")] <- 3
+g2$stage  <- as.numeric ( g2$stage)
+
+
+frame_B <-read.table(file="2.txt", header=TRUE, sep="\t")
+colnames(frame_B) <- c("NA", as.character(my_frame[main_gene_num,1]))
+frame_B
+nrow(my_frame)
+
+
+for (i in c(1:nrow(my_frame))) {
+
+#for (i in c(1:1000)) {
+#i=15
+my_frame_main_gene <- g2$stage #### here is input
+
+
+my_frame_gene_i <- my_frame[i:(i+1),]
+my_frame_main_gene_and_gene_i <- rbind(my_frame_main_gene,my_frame_gene_i)
+#my_frame_main_gene_and_gene_i
+#dim ( my_frame_main_gene_and_gene_i)
+#ncol( my_frame_main_gene_and_gene_i)
+
+my_frame_Y <-(t(my_frame_main_gene_and_gene_i)[2:ncol(my_frame_main_gene_and_gene_i),])
+my_frame_Y1 <- cbind(as.numeric(my_frame_Y[,1]),as.numeric(my_frame_Y[,2]))
+my_frame_Y2 <- data.frame( my_frame_Y1)
+my_correlation_a <- data.frame (cor(my_frame_Y2 [,1:ncol(my_frame_Y2)], method="pearson")) [1,]
+rownames(my_correlation_a) <- c(as.character(my_frame_gene_i[1,1]))
+#my_correlation_a
+
+colnames(my_correlation_a) <- colnames(frame_B)
+frame_B <- rbind(frame_B, my_correlation_a)
+
+}
+#frame_B
+frame_C <-data.frame(frame_B[,2])
+colnames(frame_C) <- c(as.character(my_frame[main_gene_num,1]))
+rownames(frame_C) <- rownames(frame_B)
+#frame_C
+Data <- frame_C[-(1),,drop=FALSE]  # still a data.frame
+#Data
+write.table(Data, file="correlation_with_others___stage.txt", sep="\t", col.names = NA)
+
+Sys.time()
+
